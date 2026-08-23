@@ -1,0 +1,15 @@
+name: LuxDialogues
+version: '3.0.5'
+main: org.aselstudios.luxdialogues.LuxDialogues
+api-version: '1.16'
+authors: [zKillerPT, Asel Studios]
+softdepend: [FancyNpcs, Citizens, ViaVersion]
+depend: [PlaceholderAPI, packetevents]
+description: Dialogue Plugin
+website: https://discord.aselstudios.com
+folia-supported: true
+commands:
+  luxdialogues:
+    description: Main command of LuxDialogues plugin
+    usage: /<command> <args>
+    aliases: [luxd, ld, LuxDialogues, LuxD, LD]
