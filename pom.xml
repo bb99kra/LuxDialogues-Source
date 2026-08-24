@@ -37,8 +37,20 @@
             <url>https://repo.extendedclip.com/releases/</url>
         </repository>
         <repository>
-            <id>arim-releases</id>
-            <url>https://mvn-repo.arim.space/lesser-releases/</url>
+            <id>placeholderapi-content</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>arim-mvn-lessergpl3</id>
+            <url>https://mvn-repo.arim.space/lesser-gpl3/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
