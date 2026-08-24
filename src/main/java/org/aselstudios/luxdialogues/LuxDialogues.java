@@ -58,38 +58,63 @@ public final class LuxDialogues extends LuxDialoguesAPI {
    private final String mcmodels = "1";
 
    public void onEnable() {
-      int pluginId = 24925;
-      new Metrics(this, pluginId);
-      adventure = BukkitAudiences.create(this);
       instance = this;
-      morePaperLib = new MorePaperLib(this);
-      dialogueSender = ForkUtil.getSender();
-      taskData = ForkUtil.getTask();
-      DialogueSenderAdapter adapter = new DialogueSenderAdapter();
-      LuxDialoguesAPI.setProvider(adapter);
-      saveALLFILES();
-      loadALLFILES();
-      LoaderUtil.loadDialoguesFromFolder();
-      langFile = YamlUtil.get("Langs/" + YamlUtil.get("config.yml").getString("Settings.lang") + ".yml");
-      this.getCommand("luxdialogues").setExecutor(new PluginCommands());
-      this.getCommand("luxdialogues").setTabCompleter(new CommandCompleter());
-      if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-         new PlaceholderUtil().register();
+      try {
+         int pluginId = 24925;
+         new Metrics(this, pluginId);
+      } catch (Throwable t) {
+         this.getLogger().warning("Failed to initialize bStats metrics: " + t.getMessage());
       }
+      try {
+         adventure = BukkitAudiences.create(this);
+      } catch (Throwable t) {
+         this.getLogger().warning("Failed to initialize BukkitAudiences: " + t.getMessage());
+      }
+      try {
+         morePaperLib = new MorePaperLib(this);
+         dialogueSender = ForkUtil.getSender();
+         taskData = ForkUtil.getTask();
+         DialogueSenderAdapter adapter = new DialogueSenderAdapter();
+         LuxDialoguesAPI.setProvider(adapter);
+         saveALLFILES();
+         loadALLFILES();
+         LoaderUtil.loadDialoguesFromFolder();
+         try {
+            String lang = YamlUtil.get("config.yml") != null ? YamlUtil.get("config.yml").getString("Settings.lang", "en") : "en";
+            langFile = YamlUtil.get("Langs/" + lang + ".yml");
+         } catch (Throwable ignored) {}
+         if (this.getCommand("luxdialogues") != null) {
+            this.getCommand("luxdialogues").setExecutor(new PluginCommands());
+            this.getCommand("luxdialogues").setTabCompleter(new CommandCompleter());
+         }
+         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PlaceholderUtil().register();
+         }
 
-      UpdateUtil.checkUpdate();
-      listenerRegisterer();
-      AdventureUtil.checkARGBLikeClass();
-      ResourceUtil.loadWidths();
-      ResourceUtil.createDefaultFont();
-      MessageUtil.sendConsole("&2LuxDialogues &7- &aPlugin enabled.");
+         UpdateUtil.checkUpdate();
+         listenerRegisterer();
+         AdventureUtil.checkARGBLikeClass();
+         ResourceUtil.loadWidths();
+         ResourceUtil.createDefaultFont();
+         MessageUtil.sendConsole("&2LuxDialogues &7- &aPlugin enabled.");
+      } catch (Throwable t) {
+         this.getLogger().severe("Error during LuxDialogues onEnable: " + t.getMessage());
+         t.printStackTrace();
+      }
    }
 
    public void onDisable() {
-      saveALLFILES();
-      Bukkit.getConsoleSender().sendMessage(ColorUtil.colorText("&4LuxDialogues &7- &cPlugin disabled."));
+      try {
+         saveALLFILES();
+      } catch (Throwable ignored) {}
+      try {
+         Bukkit.getConsoleSender().sendMessage(ColorUtil.colorText("&4LuxDialogues &7- &cPlugin disabled."));
+      } catch (Throwable ignored) {}
       if (adventure != null) {
-         adventure.close();
+         try {
+            adventure.close();
+         } catch (Throwable ignored) {}
+         adventure = null;
       }
    }
 
@@ -168,20 +193,29 @@ public final class LuxDialogues extends LuxDialoguesAPI {
    }
 
    public static void saveALLFILES() {
-      YamlUtil.save("config.yml");
-      YamlUtil.save("Langs/" + YamlUtil.get("config.yml").getString("Settings.lang") + ".yml");
+      try {
+         YamlUtil.save("config.yml");
+         if (YamlUtil.get("config.yml") != null) {
+            String lang = YamlUtil.get("config.yml").getString("Settings.lang", "en");
+            YamlUtil.save("Langs/" + lang + ".yml");
+         }
 
-      for (String fileName : YamlUtil.getAllYamlFileNames("Dialogues")) {
-         YamlUtil.load("Dialogues/" + fileName + ".yml");
+         for (String fileName : YamlUtil.getAllYamlFileNames("Dialogues")) {
+            YamlUtil.load("Dialogues/" + fileName + ".yml");
+         }
+
+         YamlUtil.save("Pack/Lines/lines.yml");
+         YamlUtil.save("Pack/Sounds/sounds.yml");
+         YamlUtil.save("Pack/Images/images.yml");
+         YamlUtil.save("Pack/Fonts/pages.yml");
+         YamlUtil.save("Pack/Widths/widths.json");
+         FirstUtil.firstInstall();
+         ResourceUtil.saveResource("Pack/Widths/widths.json", "Pack/Widths/widths.json", false);
+      } catch (Throwable t) {
+         if (instance != null) {
+            instance.getLogger().warning("Error saving config files: " + t.getMessage());
+         }
       }
-
-      YamlUtil.save("Pack/Lines/lines.yml");
-      YamlUtil.save("Pack/Sounds/sounds.yml");
-      YamlUtil.save("Pack/Images/images.yml");
-      YamlUtil.save("Pack/Fonts/pages.yml");
-      YamlUtil.save("Pack/Widths/widths.json");
-      FirstUtil.firstInstall();
-      ResourceUtil.saveResource("Pack/Widths/widths.json", "Pack/Widths/widths.json", false);
    }
 
    public static void loadALLFILES() {

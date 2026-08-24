@@ -71,8 +71,6 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-all</artifactId>
             <version>4.25.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/adventure-shaded.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -95,8 +93,7 @@
             <groupId>org.aselstudios.hooks</groupId>
             <artifactId>luxdialogues-hooks-stubs</artifactId>
             <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/luxdialogues-hooks-stubs.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -135,6 +132,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>space.arim.morepaperlib:morepaperlib</include>
+                                    <include>net.kyori:adventure-all</include>
                                 </includes>
                             </artifactSet>
                             <filters>
