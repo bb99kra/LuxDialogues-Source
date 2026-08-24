@@ -71,6 +71,8 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-all</artifactId>
             <version>4.25.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/adventure-shaded.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -93,7 +95,8 @@
             <groupId>org.aselstudios.hooks</groupId>
             <artifactId>luxdialogues-hooks-stubs</artifactId>
             <version>1.0.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/luxdialogues-hooks-stubs.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -117,6 +120,32 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+            <!-- Unpack adventure-shaded.jar into target/classes so its classes get bundled -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>unpack-adventure</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>net.kyori</groupId>
+                                    <artifactId>adventure-all</artifactId>
+                                    <version>4.25.0</version>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                    <excludes>META-INF/**</excludes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -132,7 +161,6 @@
                             <artifactSet>
                                 <includes>
                                     <include>space.arim.morepaperlib:morepaperlib</include>
-                                    <include>net.kyori:adventure-all</include>
                                 </includes>
                             </artifactSet>
                             <filters>
