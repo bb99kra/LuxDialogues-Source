@@ -36,6 +36,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/releases/</url>
         </repository>
+        <repository>
+            <id>arim-releases</id>
+            <url>https://mvn-repo.arim.space/lesser-releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -44,11 +48,6 @@
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -79,8 +78,6 @@
             <groupId>space.arim.morepaperlib</groupId>
             <artifactId>morepaperlib</artifactId>
             <version>0.4.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/morepaperlib-0.4.3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.aselstudios.hooks</groupId>
@@ -123,12 +120,22 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>org.aselstudios.luxdialogues.utils</shadedPattern>
-                                </relocation>
-                            </relocations>
+                            <artifactSet>
+                                <includes>
+                                    <include>space.arim.morepaperlib:morepaperlib</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
